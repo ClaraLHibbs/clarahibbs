@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://ClaraLHibbs.github.io/clarahibbs/index.html</loc>
-    <lastmod>2025-07-18T16:34:23.197Z</lastmod>
+    <loc>https://ClaraLHibbs.github.io/clarahibbs/project.html</loc>
+    <lastmod>2025-07-18T16:43:26.392Z</lastmod>
   </url>
   <url>
-    <loc>https://ClaraLHibbs.github.io/clarahibbs/about.html</loc>
-    <lastmod>2025-07-18T16:34:23.192Z</lastmod>
+    <loc>https://ClaraLHibbs.github.io/clarahibbs/index.html</loc>
+    <lastmod>2025-07-18T16:43:26.392Z</lastmod>
+  </url>
+  <url>
+    <loc>https://ClaraLHibbs.github.io/clarahibbs/projects/about.html</loc>
+    <lastmod>2025-07-18T16:43:26.392Z</lastmod>
   </url>
 </urlset>

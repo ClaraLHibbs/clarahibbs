@@ -1,8 +1,15 @@
 [
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
+    "objectID": "project.html",
+    "href": "project.html",
+    "title": "Projects",
+    "section": "",
+    "text": "Title\n\n\n\nAuthor\n\n\n\n\n\n\n\n\nData Wrangling for Microglia Complexity Analysis\n\n\n \n\n\n\n\n\n\nNo matching items"
+  },
+  {
+    "objectID": "projects/about.html",
+    "href": "projects/about.html",
+    "title": "Data Wrangling for Microglia Complexity Analysis",
     "section": "",
     "text": "About this site"
   }
