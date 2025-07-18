@@ -128,6 +128,7 @@ Finally, the data file is given a new name and saved as a csv to the output file
 ```{r}
 #| label: data transform
 #| depends-on: import data
+#| message: false
 
 for (file in input_files) {
   data <- read_csv(file, skip = 4, col_names = FALSE)
