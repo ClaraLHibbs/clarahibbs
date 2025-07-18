@@ -8,7 +8,7 @@ about:
     - text: GitHub
       href: https://github.com/ClaraLHibbs
     - text: Email
-      href: clara-hibbs@ou.edu
+      href: mailto:clara-hibbs@ou.edu
 ---
 
 ::: {.column-page}
