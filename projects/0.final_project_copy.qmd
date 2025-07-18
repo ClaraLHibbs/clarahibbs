@@ -197,7 +197,7 @@ df$filename_copy <- df$filename
 
 data <- separate_wider_delim(df, 
                              cols = filename_copy, 
-                             names = c("folder1", "folder2", "folder3", "id", "folder5", "folder6", "Detailed"), 
+                             names = c("folder1", "folder2", "id", "folder5", "folder6", "Detailed"), 
                              delim = "/")
 glimpse(data)
 ```
