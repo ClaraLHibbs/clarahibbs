@@ -1,7 +1,6 @@
 ---
 title: "Clara L. Hibbs"
 toc: true
-image: github_image.jpg
 about:
   template: trestles
   links:
