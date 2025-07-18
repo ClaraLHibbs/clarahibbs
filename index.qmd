@@ -9,6 +9,8 @@ about:
       href: https://github.com/ClaraLHibbs
     - text: Email
       href: mailto:clara-hibbs@ou.edu
+    - text: LinkedIn
+      href: https://www.linkedin.com/in/clarahibbs
 ---
 
 ::: {.column-page}
