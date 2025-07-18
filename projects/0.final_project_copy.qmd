@@ -157,7 +157,7 @@ The column headers are then added and the combined file is written.
 #| label: file combination
 #| depends-on: examine trimmed
 
-all_files <- list.files(here("data/Sholl_trim"), pattern = "\\.csv$", full.names = TRUE)
+all_files <- list.files("data/Sholl_trim", pattern = "\\.csv$", full.names = TRUE)
 
 df <- read.csv(all_files[1], header = FALSE)
 df <- df[df$V1 !="filename", ]
