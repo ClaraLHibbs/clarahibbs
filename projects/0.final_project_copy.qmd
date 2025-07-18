@@ -67,7 +67,7 @@ Data import is going to be a bit more complicated than usual. The Imaris softwar
 #| echo: false
 #| warning: false
 
-detailed <- read_csv("projects/data/240521_MG/21-32-07/Imaris/21-32-07_100x_CA1_1_Statistics/21-32-07_100x_CA1_c1_Detailed.csv", col_names = TRUE, skip = 3)
+detailed <- read_csv("data/240521_MG/21-32-07/Imaris/21-32-07_100x_CA1_1_Statistics/21-32-07_100x_CA1_c1_Detailed.csv", col_names = TRUE, skip = 3)
 
 head(detailed)
 
@@ -84,10 +84,10 @@ For now, I have set 2 file paths. The **input path** leads to a folder that cont
 #| label: set_paths
 
 # set path to input files
-input_path <- "projects/data/240521_MG/21-32-07/Imaris"
+input_path <- "data/240521_MG/21-32-07/Imaris"
 
 # set path to output folder
-output_path <- "projects/data/Sholl_trim"
+output_path <- "data/Sholl_trim"
 
 ```
 
@@ -157,7 +157,7 @@ The column headers are then added and the combined file is written.
 #| label: file combination
 #| depends-on: examine trimmed
 
-all_files <- list.files(here("projects/data/Sholl_trim"), pattern = "\\.csv$", full.names = TRUE)
+all_files <- list.files(here("data/Sholl_trim"), pattern = "\\.csv$", full.names = TRUE)
 
 df <- read.csv(all_files[1], header = FALSE)
 df <- df[df$V1 !="filename", ]
@@ -171,7 +171,7 @@ for (i in 2:length(all_files)) {
 
 colnames(df) <- c("filename", "intersections", "radius")
 
-write.csv(df, "projects/data/Sholl.csv", row.names = FALSE)
+write.csv(df, "data/Sholl.csv", row.names = FALSE)
 ```
 
 Taking a peek at the data frame shows that there are three columns. One contains the file path, and therefore the sample ID. The second and third contain the Sholl data.
@@ -260,7 +260,7 @@ data <- data |>
   mutate(intersections = as.numeric(as.character(intersections)))
 glimpse(data)
 
-write.csv(data, "projects/data/Sholl.csv", row.names = FALSE)
+write.csv(data, "data/Sholl.csv", row.names = FALSE)
 ```
 
 ## Metadata Time!
@@ -274,7 +274,7 @@ First, the metadata file is **read** into R.
 #| warning: false
 #| depends-on: data organization 3
 
-meta <- read.csv("projects/data/240521_MG/meta_sholl.csv", header = TRUE, stringsAsFactors = FALSE, colClasses = "character")
+meta <- read.csv("data/240521_MG/meta_sholl.csv", header = TRUE, stringsAsFactors = FALSE, colClasses = "character")
 head(meta)
 ```
 
