@@ -1,0 +1,422 @@
+---
+title: "Data Wrangling for Sholl Analysis"
+subtitle: "Intro to R Final Project"
+author: "Clara L. Hibbs"
+date: 2025-07-28
+format: 
+  html: 
+    self-contained-math: true
+editor: source
+editor_options: 
+  chunk_output_type: console
+---
+
+# What is Known about Microglia?
+
+Microglia are the resident immune cells of the central nervous system. These cells have several important functions related to *immune surveillance and response* which work to maintain brain homeostasis and protect from disease.
+
+-   [phagocytosis]{.underline} of dead cells, cellular debris, and protein aggregates
+
+-   [inflammatory response]{.underline} through secretion of pro- or anti-inflammatory cytokines
+
+Additionally, microglia regulate [neurogenesis and synaptic plasticity]{.underline} through their phagocytic and secretory actions.
+
+------------------------------------------------------------------------
+
+In healthy tissue, microglia exist in a "resting" state. This name is a bit of a misnomer as microglia are never resting. Homeostatic microglia are extremely dynamic cells which are constantly moving their processes in order to monitor the brain microenvironment.
+
+Also contributing to their dynamic nature, is their ability to perform phenotypic switching in response to environmental stimuli. In a healthy brain, a majority of microglia are in a resting morphology which is defined by a ramified appearance. Upon encountering damage- or pathogen-associated molecular patterns, microglia become reactive and retract their processes to adopt an amoeboid morphology.
+
+![](figures/phenotypic_swtich.png){fig-align="center"}
+
+# What is Sholl Analysis?
+
+The characterization of microglia morphology is commonly used as a metric of microglia activation. This characterization is most often accomplished by measuring microglia complexity through Sholl analysis.
+
+Sholl analysis applies concentric circles, each 1 um apart, to 2D or 3D renderings of microglia. The number of intersections that occur between the circles and the microglial processes are than quantified. This quantification is then used to estimate microglial complexity. More ramified, and less activated, microglia will have more intersections at radii farther from the cell soma. Amoeboid, and more activated, microglia will have less intersections.
+
+![](figures/sholl_wkflow.png){fig-align="center"}
+
+# The Data
+
+This project will be completed using a subset of Sholl analysis data that I have collected during my Ph.D. project.
+
+------------------------------------------------------------------------
+
+# The Code
+
+First thing is first, we need to load in some packages. For this script, I used **tidyverse** packages, **cowplot** for plotting, and a package called **here** which simplifies file paths.
+
+## Load Packages
+
+```{r}
+#| label: setup
+#| message: false
+
+library(tidyverse)
+library(cowplot)
+library(here)
+```
+
+## Data Import
+
+Data import is going to be a bit more complicated than usual. The Imaris software exports Sholl data in individual csv files (see below).
+
+```{r}
+#| label: initial sholl output
+#| echo: false
+#| warning: false
+
+detailed <- read_csv("/Users/clara-hibbs/Documents/GitHub/clarahibbs/projects/data/240521_MG/21-32-07/Imaris/21-32-07_100x_CA1_1_Statistics/21-32-07_100x_CA1_c1_Detailed.csv", col_names = TRUE, skip = 3)
+
+head(detailed)
+
+rm(detailed)
+```
+
+This table is from one output file. Each cell that is analyzed one of these files. I have up to 30 cells per animal resulting in an approximate total of 500 cells meaning I have 500 csv files to compare.
+
+To get around importing each of those files separately, I have written some code loops. A loop is a statement that allows for a block of code to be executed repeatedly. I have written 2 loops for this data analysis which I will explain below.
+
+For now, I have set 2 file paths. The **input path** leads to a folder that contains the raw output folders from Imaris. The **output path** leads to the folder that will store the output for the rest of the script.
+
+```{r}
+#| label: set_paths
+
+# set path to input files
+input_path <- "projects/data/240521_MG/21-32-07/Imaris"
+
+# set path to output folder
+output_path <- "projects/data/Sholl_trim"
+
+```
+
+Imaris saves the output files, named \*Detailed.csv, within a statistics folder for each cell analyzed. To speed up the process of importing each separate file, I am using the **list.files** command. This base R command lists out all of the files located in a specific directory. By setting the **path** as my input path, I told R to look in the folder that contains subdirectories with the \*Detailed.csv files. I then set the **pattern** to recognize only the \*Detailed.csv files. Setting **recursive** as true allows R to open the subdirectories within the Imaris folder. Setting **full.names** to true means that the entire relative file path will be listed instead of just the file name.
+
+```{r}
+#| label: import_data
+#| depends-on: set_paths
+
+# open subfolders and find the *Detailed.csv files
+input_files <- list.files(
+  path = input_path,
+  pattern = "Detailed\\.csv$",
+  recursive = TRUE,
+  full.names = TRUE)
+```
+
+There is no output from this command as it is saved to input_files.
+
+## Data Transformation
+
+Now that all of the input files have been located, we can begin to remove unnecessary columns. Let's have a look at the data file again.
+
+![](figures/original.png){fig-align="center" width="442"}
+
+You'll notice that the data does not begin until row 5 with column headers in row 4. Additionally, the data necessary for Sholl analysis are located in the "Filament No. Sholl Intersections" and "Radius" columns. The four other columns do not provide helpful data.
+
+Before we combine all of the statistics files together, it would be smart to organize the individual files. I have written a loop that will do exactly that.
+
+First of all, the loop with repeat for each file listed by input_files. It will start with the first file and continue down the list until it completes all 17 files.
+
+The first step of the loop is to **read** in the csv file. Using *skip = 4* means that the first 4 rows of each file will be skipped. This removes the 4 unnecessary rows of headers. Since the headers were removed, *col_names* is set to false.
+
+In the next step, the data file is updated to only include the two columns containing Sholl data using **select**, and these columns are given headers using **rename**. Additionally, **mutate** is used to add a new column to the data file which includes the file path.
+
+Finally, the data file is given a new name and saved as a csv to the output file. Let's walk backwards through the code. The file name is extracted from the full file path using **basename**. The file extension (.csv) is then removed using **file_path_sans_ext**. The **paste0** function allows for ".trim.csv" to be added to the end of the file name. The newly trimmed data file is then saved to the output folder with the new name.
+
+```{r}
+#| label: data transform
+#| depends-on: import data
+
+for (file in input_files) {
+  data <- read_csv(file, skip = 4, col_names = FALSE)
+  
+  trimmed <- data |>
+    mutate(filename = file) |>
+    select(filename, X1, X4) |>
+    rename(intersections = X1,
+           radius = X4)
+  
+  output_file <- file.path(output_path, paste0(tools::file_path_sans_ext(basename(file)), ".trim.csv"))
+  write_csv(trimmed, output_file)
+}
+```
+
+## Data Combination
+
+Now we have a folder with several different csv files containing Sholl data for each analyzed cell. The next step is to combine these individual data files into one.
+
+First, we once again use **list.files** to create a list that contains all trimmed data files. The first file is then **read** into R and removes the rows that contain "filename" which is the header row. This row is removed to prevent repeated header columns in the final data frame. The remaining files are edited and eventually combined with a loop. The first file is excluded from the loop in order to create a data frame that the remaining data can be added to.
+
+The loop starts the same as the previous code for the first file. Then the new data frame is added to the existing data frame containing the first file. The loop repeats until all of the files have been added to the combined data frame.
+
+The column headers are then added and the combined file is written.
+
+```{r}
+#| label: file combination
+#| depends-on: examine trimmed
+
+all_files <- list.files(here("projects/data/Sholl_trim"), pattern = "\\.csv$", full.names = TRUE)
+
+df <- read.csv(all_files[1], header = FALSE)
+df <- df[df$V1 !="filename", ]
+
+for (i in 2:length(all_files)) {
+  tmp <- read.csv(all_files[i], header = FALSE)
+  tmp <- tmp[tmp$V1 !="filename", ]
+  df <- rbind(df, tmp)
+  print(paste("Processed file", i, "of", length(all_files)))
+}
+
+colnames(df) <- c("filename", "intersections", "radius")
+
+write.csv(df, "/Users/clara-hibbs/Documents/GitHub/clarahibbs/projects/data/Sholl.csv", row.names = FALSE)
+```
+
+Taking a peek at the data frame shows that there are three columns. One contains the file path, and therefore the sample ID. The second and third contain the Sholl data.
+
+```{r}
+#| label: examine df
+#| depends-on: file combination
+
+glimpse(df)
+```
+
+## Text to Column
+
+As mentioned, each sample ID is currently stored in a file path. Obviously, this is not ideal. The file path can be separated into individual columns to isolate important sample information.
+
+To preserve the integrity of the original file path column, the column is duplicated. The text in the duplicated column can be turned into individual columns using **separate_wider_delim**.
+
+```{r}
+#| label: data organization
+#| depends-on: examine df
+
+df$filename_copy <- df$filename
+
+data <- separate_wider_delim(df, 
+                             cols = filename_copy, 
+                             names = c("folder1", "folder2", "folder3", "id", "folder5", "folder6", "Detailed"), 
+                             delim = "/")
+glimpse(data)
+```
+
+The data frame now contains six new columns. However, four of these columns contain unnecessary information and can be removed from the data frame. Using **select**, the important columns were isolated in the data frame.
+
+```{r}
+#| label: subset data
+#| depends-on: data organization
+
+data <- data |>
+  select(id, filename, intersections, radius, Detailed)
+head(data)
+```
+
+## Text to Column... Again
+
+The data frame now contains the sample ID, but the newly dubbed Detailed column still contains more crucial information. This information includes the subregion in which the cell was located and cell number. Text to columns can be used again to separate this information.
+
+```{r}
+#| label: data organization 2
+#| depends-on: subset data
+
+data <- separate_wider_delim(data,
+                             cols = Detailed,
+                             names = c("x1", "x2", "subregion", "cell", "x3"),
+                             delim = "_")
+glimpse(data)
+```
+
+Once again, the necessary columns can be isolated from the unnecessary ones using **select**. Additionally, more sample information can be added to the data frame. Based on the subregion isolated from the filename, the region can be inferred.
+
+TRUE \~ NA_character\_ ensures that any data that does not match either of the presented cases is labeled as NA.
+
+```{r}
+#| label: subset data 2
+#| depends-on: data organization 2
+
+data <- data |> select(id, subregion, cell, filename, intersections, radius) |>
+  rename(CellID = filename) |>
+  mutate(section = str_extract(subregion, "\\d"),
+         region_prefix = str_extract(subregion, "[A-Z]+"),
+         region = case_when(
+           region_prefix %in% c("CA", "DG") ~ "HPC",
+           region_prefix %in% c("DS", "VS") ~ "STR",
+           TRUE ~ NA_character_))
+head(data)
+```
+
+For the final time, the important data is isolated from the unneeded data columns. Additionally, **mutate** is used to convert the "radius" and "intersections" columns from character vectors to numeric vectors.
+
+```{r}
+#| label: data organization 3
+#| depends-on: subset data 2
+
+data <- data |> select(id, region, subregion, section, cell, CellID, intersections, radius)
+head(data)
+data <- data |>
+  mutate(radius = as.numeric(as.character(radius))) |>
+  mutate(intersections = as.numeric(as.character(intersections)))
+glimpse(data)
+
+write.csv(data, "/Users/clara-hibbs/Documents/GitHub/clarahibbs/projects/data/Sholl.csv", row.names = FALSE)
+```
+
+## Metadata Time!
+
+While the data has been parsed as much as possible, data is still missing from the file. These missing factors include variables such as sex, group, and age which are needed for data comparison. This data is readily accessible in a metadata file that I previously made. This metadata file can be applied to the data frame to match the correct variables to each sample ID.
+
+First, the metadata file is **read** into R.
+
+```{r}
+#| label: import metadata
+#| warning: false
+#| depends-on: data organization 3
+
+meta <- read.csv("/Users/clara-hibbs/Documents/GitHub/clarahibbs/projects/data/240521_MG/meta_sholl.csv", header = TRUE, stringsAsFactors = FALSE, colClasses = "character")
+head(meta)
+```
+
+**Merge** is used to combine the data frame with the metadata file. Merge will automatically match the "id" columns and applies the remaining metadata columns correctly.
+
+```{r}
+#| label: merge data and meta
+#| depends-on: import metadata
+
+data <- merge(data, meta)
+glimpse(data)
+```
+
+The dataset is then reorganized using **relocate** to place all of the metadata columns together.
+
+```{r}
+#| label: metadata organization
+#| depends-on: merge data and meta
+
+data <- data |> relocate(9:14, .after=id)
+glimpse(data)
+```
+
+We can use **table** to quickly examine the data.
+
+```{r}
+#| label: examine dataset
+#| depends-on: metadata organization
+
+table(data$id)
+
+table(data$group)
+
+table(data$sex)
+
+table(data$age)
+
+table(data$subregion)
+```
+
+# Sholl Analysis
+
+The data has now been fully wrangled and is ready for analysis! As this is an introduction to R class, we'll just do some simple plotting with ggplot.
+
+```{r}
+#| label: add n mouse and litter
+#| depends-on: examine dataset
+#| include: false
+
+data |> group_by(group, sex, subregion) |> 
+  summarise(n = length(unique(CellID)), mouse = length(unique(id)), litter = length(unique(litter)))
+```
+
+As the data represents microglia populations in four different regions of the brain, we'll make a plot for each and combine them at the end.
+
+For the first plot, we will **filter** the data to only include data from the dorsal striatum. We can then pipe to ggplot and assign radius to the x-axis and intersections to the y-axis. Using **geom_smooth** fits a smoothed line to the data. The addition of **stat_summary** to the code adds the mean and standard error to each point. Then, aesthetic changes are made to the plot. This is repeated for each subregion.
+
+```{r}
+#| label: dorsal striatum plot
+#| depends-on: examine dataset
+
+a <- data |> filter(str_starts(subregion, "DS")) |>
+  ggplot(aes(x=radius, y=intersections)) +
+  geom_smooth(se=FALSE, color = "palegreen4") +
+  stat_summary(fun.data=mean_se, geom="pointrange", color = "palegreen4") +
+  theme_cowplot() +
+  labs(subtitle = "Dorsal Striatum") +
+  coord_cartesian(xlim = c(0,60), ylim = c(0,30)) +
+  theme(legend.position = "none") +
+  xlab("Radius (um)") + 
+  ylab("Number of Intersections")
+```
+
+```{r}
+#| label: ventral striatum plot
+#| depends-on: examine dataset
+
+b <- data |> filter(str_starts(subregion,"VS")) |>
+  ggplot(aes(x=radius, y=intersections)) +
+  geom_smooth(se=FALSE, color = "sienna3") +
+  stat_summary(fun.data=mean_se, geom="pointrange", color = "sienna3") +
+  theme_cowplot() +
+  labs(subtitle = "Ventral Striatum") +
+  coord_cartesian(xlim = c(0,60), ylim = c(0,30)) +
+  theme(legend.position = "none") +
+  xlab("Radius (um)") + 
+  ylab("Number of Intersections")
+```
+
+```{r}
+#| label: dentate gyrus plot
+#| depends-on: examine dataset
+
+c <- data |> filter(str_starts(subregion, "DG")) |>
+  ggplot(aes(x=radius, y=intersections)) +
+  geom_smooth(se=FALSE, color = "skyblue4") +
+  stat_summary(fun.data=mean_se, geom="pointrange", color = "skyblue4") +
+  theme_cowplot() +
+  labs(subtitle = "Dentate Gyrus") +
+  coord_cartesian(xlim = c(0,60), ylim = c(0,30)) +
+  theme(legend.position = "none") +
+  xlab("Radius (um)") + 
+  ylab("Number of Intersections")
+```
+
+```{r}
+#| label: CA1 plot
+#| depends-on: examine dataset
+
+d <- data |> filter(subregion == "CA1") |>
+  ggplot(aes(x=radius, y=intersections)) +
+  geom_smooth(se=FALSE, color = "orchid4") +
+  stat_summary(fun.data=mean_se, geom="pointrange", color = "orchid4", ) +
+  theme_cowplot() +
+  labs(subtitle = "CA1") +
+  coord_cartesian(xlim = c(0,60), ylim = c(0,30)) +
+  theme(legend.position = "none") +
+  xlab("Radius (um)") + 
+  ylab("Number of Intersections")
+```
+
+Now that plotting commands have been made for each subregion, **plot_grid** can be used to combine the 4 plots into one figure. To add a title to the combined plot, a drawing layer is added with **ggdraw**.
+
+```{r}
+#| label: combine plots
+#| warning: false
+
+combined <- plot_grid(a, b, c, d, nrow = 2)
+
+final_plot <- plot_grid(ggdraw() +
+                          draw_label("Microglia Complexity in Different Aged Brain Regions", fontface = "bold", size = 14),
+                        combined,
+                        ncol =1,
+                        rel_heights = c(0.1, 1))
+
+print(final_plot)
+```
+
+With the completion of this project, I have written a script that I can use in my Ph.D. project. This script will greatly simplify the process of data wrangling for Sholl data which has been time consuming and prone to human error in the past.
+
+```{r}
+#| label: system info
+
+sessionInfo()
+```
