@@ -6,9 +6,9 @@ about:
   template: trestles
   links:
     - text: GitHub
-      href: link
+      href: https://github.com/ClaraLHibbs
     - text: Email
-      href: link
+      href: clara-hibbs@ou.edu
 ---
 
 ::: {.column-page}
