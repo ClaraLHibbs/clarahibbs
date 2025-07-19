@@ -5,12 +5,14 @@ image: github_image.jpg
 about:
   template: trestles
   links:
+    - text: ORCID
+      href: https://orcid.org/0009-0008-7277-7608
     - text: GitHub
       href: https://github.com/ClaraLHibbs
-    - text: Email
-      href: mailto:clara-hibbs@ou.edu
     - text: LinkedIn
       href: https://www.linkedin.com/in/clarahibbs
+    - text: Email
+      href: mailto:clara-hibbs@ou.edu
 ---
 
 ::: {.column-page}

@@ -1,5 +1,10 @@
 ---
-title: "publications"
+title: "Publications"
 format: html
 ---
 
+1.  Pinckard J, Negri S, Huston CA, Bickel MA, Vance ML, Milan M, **Hibbs CL**, Budda M, Chandragiri SS, Pipkin K, Tarantini S, Conley SM. Functional ultrasound as a quantitative approach for measuring functional hyperemia in aging models. Neuroimage. 2025 Aug 1;316:121313. doi: 10.1016/j.neuroimage.2025.121313. Epub 2025 Jun 12. PMID: 40513179; PMCID: PMC12257925.
+
+2.  Huston CA, Milan M, Vance ML, Bickel MA, Miller LR, Negri S, **Hibbs C**, Vaden H, Hayes L, Csiszar A, Ungvari Z, Yabluchanskiy A, Tarantini S, Conley SM. The effects of time restricted feeding on age-related changes in the mouse retina. Exp Gerontol. 2024 Sep;194:112510. doi: 10.1016/j.exger.2024.112510. Epub 2024 Jul 5. PMID: 38964431; PMCID: PMC11425985.
+
+3.  Miller LR, Bickel MA, Tarantini S, Runion ME, Matacchiera Z, Vance ML, **Hibbs C**, Vaden H, Nagykaldi D, Martin T, Bullen EC, Pinckard J, Kiss T, Howard EW, Yabluchanskiy A, Conley SM. IGF1R deficiency in vascular smooth muscle cells impairs myogenic autoregulation and cognition in mice. Front Aging Neurosci. 2024 Feb 15;16:1320808. doi: 10.3389/fnagi.2024.1320808. PMID: 38425784; PMCID: PMC10902040.
