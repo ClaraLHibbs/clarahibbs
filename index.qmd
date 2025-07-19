@@ -16,9 +16,12 @@ about:
 ::: {.column-page}
 
 ## Bio
+I am a graduate student in the Department of Cell Biology at the University of Oklahoma Health Sciences Center. My Ph.D. project focuses on how maternal inflammation causes sex differences in onset of age-related cognitive decline due to manipulation of microglial response.
 
 ## Research Goals
+My research interests lie with investigating women’s health. My long-term career goal is to establish my own research laboratory to investigate how the molecular aspects of menopause result in increased risk for neurodegenerative diseases. I recognize the limited research in diseases that disproportionately affect women. I have decided that I wanted my research career to be focused on closing the gap in women’s health research, particularly in diseases with increased risk for women after menopause.
 
 ## Experience
+I have expertise in cell and molecular biology, microglia, and data science including bioinformatics.
 
 :::
