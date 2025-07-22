@@ -1,12 +1,11 @@
 /*-- scss:defaults --*/
 
 //Fonts
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+
 
 // Colors
 $dark-green: #596b57;
 $light-green: #D1D9CE;
-$white: #FFFFFF;
 $cream: #FDFBF7;
 $gray: #64605f;
 $purple: #9158A2;
@@ -17,7 +16,7 @@ $black: #151617;
 $navbar-bg: $dark-green; // navbar
 $navbar-fg: $cream; // navbar foreground elements
 $navbar-hl: $light-green; // highlight color when hovering over navbar links
-$body-bg: $white; // page background 
+$body-bg: $cream; // page background 
 $body-color: $black; // page text 
 $footer-bg: $cream; // footer 
 

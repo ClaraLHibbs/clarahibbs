@@ -4,14 +4,15 @@ toc: true
 image: github_image.jpg
 about:
   template: trestles
+  image-shape: round
   links:
-    - text: ORCID
+    - icon: person-fill
       href: https://orcid.org/0009-0008-7277-7608
-    - text: GitHub
+    - icon: github
       href: https://github.com/ClaraLHibbs
-    - text: LinkedIn
+    - icon: linkedin
       href: https://www.linkedin.com/in/clarahibbs
-    - text: Email
+    - icon: envelope-fill
       href: mailto:clara-hibbs@ou.edu
 ---
 

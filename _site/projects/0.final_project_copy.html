@@ -104,7 +104,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 
-<link rel="stylesheet" href="../styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -125,12 +124,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="../index.html"> 
+    <a class="nav-link" href="../index.html"> <i class="bi bi-house-door-fill" role="img">
+</i> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="../projects.html"> 
+    <a class="nav-link" href="../projects.html"> <i class="bi bi-hammer" role="img">
+</i> 
 <span class="menu-text">Projects</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../publications.html"> <i class="bi bi-journal-bookmark-fill" role="img">
+</i> 
+<span class="menu-text">Publications</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../cv.html"> <i class="bi bi-file-earmark-person" role="img">
+</i> 
+<span class="menu-text">CV</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -264,10 +275,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>For now, I have set 2 file paths. The <strong>input path</strong> leads to a folder that contains the raw output folders from Imaris. The <strong>output path</strong> leads to the folder that will store the output for the rest of the script.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set path to input files</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>input_path <span class="ot">&lt;-</span> <span class="st">"projects/data/240521_MG/21-32-07/Imaris"</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>input_path <span class="ot">&lt;-</span> <span class="st">"data/240521_MG/21-32-07/Imaris"</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># set path to output folder</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>output_path <span class="ot">&lt;-</span> <span class="st">"projects/data/Sholl_trim"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>output_path <span class="ot">&lt;-</span> <span class="st">"data/Sholl_trim"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Imaris saves the output files, named *Detailed.csv, within a statistics folder for each cell analyzed. To speed up the process of importing each separate file, I am using the <strong>list.files</strong> command. This base R command lists out all of the files located in a specific directory. By setting the <strong>path</strong> as my input path, I told R to look in the folder that contains subdirectories with the *Detailed.csv files. I then set the <strong>pattern</strong> to recognize only the *Detailed.csv files. Setting <strong>recursive</strong> as true allows R to open the subdirectories within the Imaris folder. Setting <strong>full.names</strong> to true means that the entire relative file path will be listed instead of just the file name.</p>
 <div class="cell" data-depends-on="set_paths">
@@ -316,7 +327,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The loop starts the same as the previous code for the first file. Then the new data frame is added to the existing data frame containing the first file. The loop repeats until all of the files have been added to the combined data frame.</p>
 <p>The column headers are then added and the combined file is written.</p>
 <div class="cell" data-depends-on="examine trimmed">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>all_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="fu">here</span>(<span class="st">"projects/data/Sholl_trim"</span>), <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">.csv$"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>all_files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"data/Sholl_trim"</span>, <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">.csv$"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(all_files[<span class="dv">1</span>], <span class="at">header =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df[df<span class="sc">$</span>V1 <span class="sc">!=</span><span class="st">"filename"</span>, ]</span>
@@ -347,7 +358,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"filename"</span>, <span class="st">"intersections"</span>, <span class="st">"radius"</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(df, <span class="st">"/Users/clara-hibbs/Documents/GitHub/clarahibbs/projects/data/Sholl.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(df, <span class="st">"data/Sholl.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Taking a peek at the data frame shows that there are three columns. One contains the file path, and therefore the sample ID. The second and third contain the Sholl data.</p>
 <div class="cell" data-depends-on="file combination">
@@ -355,7 +366,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 735
 Columns: 3
-$ filename      &lt;chr&gt; "projects/data/240521_MG/21-32-07/Imaris/21-32-07_100x_C…
+$ filename      &lt;chr&gt; "data/240521_MG/21-32-07/Imaris/21-32-07_100x_CA1_1_Stat…
 $ intersections &lt;chr&gt; "0", "0", "0", "1", "9", "14", "16", "17", "23", "27", "…
 $ radius        &lt;chr&gt; "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", …</code></pre>
 </div>
@@ -370,18 +381,17 @@ $ radius        &lt;chr&gt; "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "1
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">separate_wider_delim</span>(df, </span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">cols =</span> filename_copy, </span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">names =</span> <span class="fu">c</span>(<span class="st">"folder1"</span>, <span class="st">"folder2"</span>, <span class="st">"folder3"</span>, <span class="st">"id"</span>, <span class="st">"folder5"</span>, <span class="st">"folder6"</span>, <span class="st">"Detailed"</span>), </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                             <span class="at">names =</span> <span class="fu">c</span>(<span class="st">"folder1"</span>, <span class="st">"folder2"</span>, <span class="st">"id"</span>, <span class="st">"folder5"</span>, <span class="st">"folder6"</span>, <span class="st">"Detailed"</span>), </span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                             <span class="at">delim =</span> <span class="st">"/"</span>)</span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 735
-Columns: 10
-$ filename      &lt;chr&gt; "projects/data/240521_MG/21-32-07/Imaris/21-32-07_100x_C…
+Columns: 9
+$ filename      &lt;chr&gt; "data/240521_MG/21-32-07/Imaris/21-32-07_100x_CA1_1_Stat…
 $ intersections &lt;chr&gt; "0", "0", "0", "1", "9", "14", "16", "17", "23", "27", "…
 $ radius        &lt;chr&gt; "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", …
-$ folder1       &lt;chr&gt; "projects", "projects", "projects", "projects", "project…
-$ folder2       &lt;chr&gt; "data", "data", "data", "data", "data", "data", "data", …
-$ folder3       &lt;chr&gt; "240521_MG", "240521_MG", "240521_MG", "240521_MG", "240…
+$ folder1       &lt;chr&gt; "data", "data", "data", "data", "data", "data", "data", …
+$ folder2       &lt;chr&gt; "240521_MG", "240521_MG", "240521_MG", "240521_MG", "240…
 $ id            &lt;chr&gt; "21-32-07", "21-32-07", "21-32-07", "21-32-07", "21-32-0…
 $ folder5       &lt;chr&gt; "Imaris", "Imaris", "Imaris", "Imaris", "Imaris", "Imari…
 $ folder6       &lt;chr&gt; "21-32-07_100x_CA1_1_Statistics", "21-32-07_100x_CA1_1_S…
@@ -397,12 +407,12 @@ $ Detailed      &lt;chr&gt; "21-32-07_100x_CA1_c1_Detailed.csv", "21-32-07_100x_
 <pre><code># A tibble: 6 × 5
   id       filename                                intersections radius Detailed
   &lt;chr&gt;    &lt;chr&gt;                                   &lt;chr&gt;         &lt;chr&gt;  &lt;chr&gt;   
-1 21-32-07 projects/data/240521_MG/21-32-07/Imari… 0             0      21-32-0…
-2 21-32-07 projects/data/240521_MG/21-32-07/Imari… 0             1      21-32-0…
-3 21-32-07 projects/data/240521_MG/21-32-07/Imari… 0             2      21-32-0…
-4 21-32-07 projects/data/240521_MG/21-32-07/Imari… 1             3      21-32-0…
-5 21-32-07 projects/data/240521_MG/21-32-07/Imari… 9             4      21-32-0…
-6 21-32-07 projects/data/240521_MG/21-32-07/Imari… 14            5      21-32-0…</code></pre>
+1 21-32-07 data/240521_MG/21-32-07/Imaris/21-32-0… 0             0      21-32-0…
+2 21-32-07 data/240521_MG/21-32-07/Imaris/21-32-0… 0             1      21-32-0…
+3 21-32-07 data/240521_MG/21-32-07/Imaris/21-32-0… 0             2      21-32-0…
+4 21-32-07 data/240521_MG/21-32-07/Imaris/21-32-0… 1             3      21-32-0…
+5 21-32-07 data/240521_MG/21-32-07/Imaris/21-32-0… 9             4      21-32-0…
+6 21-32-07 data/240521_MG/21-32-07/Imaris/21-32-0… 14            5      21-32-0…</code></pre>
 </div>
 </div>
 </section>
@@ -419,7 +429,7 @@ $ Detailed      &lt;chr&gt; "21-32-07_100x_CA1_c1_Detailed.csv", "21-32-07_100x_
 <pre><code>Rows: 735
 Columns: 9
 $ id            &lt;chr&gt; "21-32-07", "21-32-07", "21-32-07", "21-32-07", "21-32-0…
-$ filename      &lt;chr&gt; "projects/data/240521_MG/21-32-07/Imaris/21-32-07_100x_C…
+$ filename      &lt;chr&gt; "data/240521_MG/21-32-07/Imaris/21-32-07_100x_CA1_1_Stat…
 $ intersections &lt;chr&gt; "0", "0", "0", "1", "9", "14", "16", "17", "23", "27", "…
 $ radius        &lt;chr&gt; "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", …
 $ x1            &lt;chr&gt; "21-32-07", "21-32-07", "21-32-07", "21-32-07", "21-32-0…
@@ -445,12 +455,12 @@ $ x3            &lt;chr&gt; "Detailed.csv", "Detailed.csv", "Detailed.csv", "Det
 <pre><code># A tibble: 6 × 9
   id    subregion cell  CellID intersections radius section region_prefix region
   &lt;chr&gt; &lt;chr&gt;     &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;         &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;         &lt;chr&gt; 
-1 21-3… CA1       c1    proje… 0             0      1       CA            HPC   
-2 21-3… CA1       c1    proje… 0             1      1       CA            HPC   
-3 21-3… CA1       c1    proje… 0             2      1       CA            HPC   
-4 21-3… CA1       c1    proje… 1             3      1       CA            HPC   
-5 21-3… CA1       c1    proje… 9             4      1       CA            HPC   
-6 21-3… CA1       c1    proje… 14            5      1       CA            HPC   </code></pre>
+1 21-3… CA1       c1    data/… 0             0      1       CA            HPC   
+2 21-3… CA1       c1    data/… 0             1      1       CA            HPC   
+3 21-3… CA1       c1    data/… 0             2      1       CA            HPC   
+4 21-3… CA1       c1    data/… 1             3      1       CA            HPC   
+5 21-3… CA1       c1    data/… 9             4      1       CA            HPC   
+6 21-3… CA1       c1    data/… 14            5      1       CA            HPC   </code></pre>
 </div>
 </div>
 <p>For the final time, the important data is isolated from the unneeded data columns. Additionally, <strong>mutate</strong> is used to convert the “radius” and “intersections” columns from character vectors to numeric vectors.</p>
@@ -461,12 +471,12 @@ $ x3            &lt;chr&gt; "Detailed.csv", "Detailed.csv", "Detailed.csv", "Det
 <pre><code># A tibble: 6 × 8
   id       region subregion section cell  CellID            intersections radius
   &lt;chr&gt;    &lt;chr&gt;  &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;             &lt;chr&gt;         &lt;chr&gt; 
-1 21-32-07 HPC    CA1       1       c1    projects/data/24… 0             0     
-2 21-32-07 HPC    CA1       1       c1    projects/data/24… 0             1     
-3 21-32-07 HPC    CA1       1       c1    projects/data/24… 0             2     
-4 21-32-07 HPC    CA1       1       c1    projects/data/24… 1             3     
-5 21-32-07 HPC    CA1       1       c1    projects/data/24… 9             4     
-6 21-32-07 HPC    CA1       1       c1    projects/data/24… 14            5     </code></pre>
+1 21-32-07 HPC    CA1       1       c1    data/240521_MG/2… 0             0     
+2 21-32-07 HPC    CA1       1       c1    data/240521_MG/2… 0             1     
+3 21-32-07 HPC    CA1       1       c1    data/240521_MG/2… 0             2     
+4 21-32-07 HPC    CA1       1       c1    data/240521_MG/2… 1             3     
+5 21-32-07 HPC    CA1       1       c1    data/240521_MG/2… 9             4     
+6 21-32-07 HPC    CA1       1       c1    data/240521_MG/2… 14            5     </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">radius =</span> <span class="fu">as.numeric</span>(<span class="fu">as.character</span>(radius))) <span class="sc">|&gt;</span></span>
@@ -480,11 +490,11 @@ $ region        &lt;chr&gt; "HPC", "HPC", "HPC", "HPC", "HPC", "HPC", "HPC", "HP
 $ subregion     &lt;chr&gt; "CA1", "CA1", "CA1", "CA1", "CA1", "CA1", "CA1", "CA1", …
 $ section       &lt;chr&gt; "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "…
 $ cell          &lt;chr&gt; "c1", "c1", "c1", "c1", "c1", "c1", "c1", "c1", "c1", "c…
-$ CellID        &lt;chr&gt; "projects/data/240521_MG/21-32-07/Imaris/21-32-07_100x_C…
+$ CellID        &lt;chr&gt; "data/240521_MG/21-32-07/Imaris/21-32-07_100x_CA1_1_Stat…
 $ intersections &lt;dbl&gt; 0, 0, 0, 1, 9, 14, 16, 17, 23, 27, 20, 19, 19, 15, 16, 3…
 $ radius        &lt;dbl&gt; 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16…</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(data, <span class="st">"/Users/clara-hibbs/Documents/GitHub/clarahibbs/projects/data/Sholl.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(data, <span class="st">"data/Sholl.csv"</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="metadata-time" class="level2">
@@ -492,7 +502,7 @@ $ radius        &lt;dbl&gt; 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15
 <p>While the data has been parsed as much as possible, data is still missing from the file. These missing factors include variables such as sex, group, and age which are needed for data comparison. This data is readily accessible in a metadata file that I previously made. This metadata file can be applied to the data frame to match the correct variables to each sample ID.</p>
 <p>First, the metadata file is <strong>read</strong> into R.</p>
 <div class="cell" data-depends-on="data organization 3">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>meta <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"/Users/clara-hibbs/Documents/GitHub/clarahibbs/projects/data/240521_MG/meta_sholl.csv"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>, <span class="at">colClasses =</span> <span class="st">"character"</span>)</span>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>meta <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/240521_MG/meta_sholl.csv"</span>, <span class="at">header =</span> <span class="cn">TRUE</span>, <span class="at">stringsAsFactors =</span> <span class="cn">FALSE</span>, <span class="at">colClasses =</span> <span class="st">"character"</span>)</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(meta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>        id litter group  trt sex months  age
@@ -511,7 +521,7 @@ $ region        &lt;chr&gt; "HPC", "HPC", "HPC", "HPC", "HPC", "HPC", "HPC", "HP
 $ subregion     &lt;chr&gt; "CA1", "CA1", "CA1", "CA1", "CA1", "CA1", "CA1", "CA1", …
 $ section       &lt;chr&gt; "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "…
 $ cell          &lt;chr&gt; "c1", "c1", "c1", "c1", "c1", "c1", "c1", "c1", "c1", "c…
-$ CellID        &lt;chr&gt; "projects/data/240521_MG/21-32-07/Imaris/21-32-07_100x_C…
+$ CellID        &lt;chr&gt; "data/240521_MG/21-32-07/Imaris/21-32-07_100x_CA1_1_Stat…
 $ intersections &lt;dbl&gt; 0, 0, 0, 1, 9, 14, 16, 17, 23, 27, 20, 19, 19, 15, 16, 3…
 $ radius        &lt;dbl&gt; 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16…
 $ litter        &lt;chr&gt; "21-32", "21-32", "21-32", "21-32", "21-32", "21-32", "2…
@@ -540,7 +550,7 @@ $ region        &lt;chr&gt; "HPC", "HPC", "HPC", "HPC", "HPC", "HPC", "HPC", "HP
 $ subregion     &lt;chr&gt; "CA1", "CA1", "CA1", "CA1", "CA1", "CA1", "CA1", "CA1", …
 $ section       &lt;chr&gt; "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "…
 $ cell          &lt;chr&gt; "c1", "c1", "c1", "c1", "c1", "c1", "c1", "c1", "c1", "c…
-$ CellID        &lt;chr&gt; "projects/data/240521_MG/21-32-07/Imaris/21-32-07_100x_C…
+$ CellID        &lt;chr&gt; "data/240521_MG/21-32-07/Imaris/21-32-07_100x_CA1_1_Stat…
 $ intersections &lt;dbl&gt; 0, 0, 0, 1, 9, 14, 16, 17, 23, 27, 20, 19, 19, 15, 16, 3…
 $ radius        &lt;dbl&gt; 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16…</code></pre>
 </div>

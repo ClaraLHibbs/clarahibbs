@@ -4,21 +4,25 @@ project:
 website:
   title: "Clara L. Hibbs"
   navbar:
-    left:
-      - href: index.qmd
+    right:
+      - icon: house-door-fill
+        href: index.qmd
         text: Home
-      - href: projects.qmd
+      - icon: hammer
+        href: projects.qmd
         text: Projects
-      - href: publications.qmd
+      - icon: journal-bookmark-fill
+        href: publications.qmd
         text: Publications
-      - href: cv.qmd
+      - icon: file-earmark-person
+        href: cv.qmd
         text: CV
 
 format:
   html:
-    theme: cosmo
-    css: styles.scss
+    theme: styles.scss
     toc: true
+    mainfont: DM Sans
 
 
 
